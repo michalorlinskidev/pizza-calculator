@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import pl.morlinski.pizza_calculator.R;
 
+import static android.text.TextUtils.isEmpty;
+import static java.lang.Double.parseDouble;
 import static java.lang.Math.PI;
 import static java.lang.Math.pow;
 
@@ -32,22 +34,31 @@ public class HomeFragment extends Fragment {
         final TextView pizza2Price = root.findViewById(R.id.pizza2Price);
         final TextView result = root.findViewById(R.id.result);
         final Button pizzaCalc = root.findViewById(R.id.pizzaCalc);
+        final TextView pizza1Quantity = root.findViewById(R.id.pizza1Quantity);
+        final TextView pizza2Quantity = root.findViewById(R.id.pizza2Quantity);
 
         pizzaCalc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double pizza1DiameterValue = Float.parseFloat(pizza1Diameter.getText().toString());
-                double pizza2DiameterValue = Float.parseFloat(pizza2Diameter.getText().toString());
-                double pizza1PriceValue = Float.parseFloat(pizza1Price.getText().toString());
-                double pizza2PriceValue = Float.parseFloat(pizza2Price.getText().toString());
+                if (isEmpty(pizza1Diameter.getText()) || isEmpty(pizza1Price.getText()) || isEmpty(pizza1Quantity.getText()) || isEmpty(pizza2Diameter.getText()) || isEmpty(pizza2Price.getText()) || isEmpty(pizza2Quantity.getText())) {
+                    result.setText("Za mało danych do wyliczeń.");
+                    return;
+                }
 
-                double pizza1Area = PI * pow(pizza1DiameterValue / 2.0, 2);
-                double pizza2Area = PI * pow(pizza2DiameterValue / 2.0, 2);
+                double pizza1DiameterValue = parseDouble(pizza1Diameter.getText().toString());
+                double pizza2DiameterValue = parseDouble(pizza2Diameter.getText().toString());
+                double pizza1PriceValue = parseDouble(pizza1Price.getText().toString());
+                double pizza2PriceValue = parseDouble(pizza2Price.getText().toString());
+                double pizza1QuantityValue = parseDouble(pizza1Quantity.getText().toString());
+                double pizza2QuantityValue = parseDouble(pizza2Quantity.getText().toString());
+
+                double pizza1Area = PI * pow(pizza1DiameterValue / 2.0, 2) * pizza1QuantityValue;
+                double pizza2Area = PI * pow(pizza2DiameterValue / 2.0, 2) * pizza2QuantityValue;
 
                 double pizza1PricePer1cm_2 = pizza1PriceValue / pizza1Area;
                 double pizza2PricePer1cm_2 = pizza2PriceValue / pizza2Area;
 
-                result.setText("Cena pizzy (na 1cm^2): " + pizza1PricePer1cm_2 + " vs " + pizza2PricePer1cm_2);
+                result.setText("Bardziej opłaca Ci się opcja numer: " + (pizza1PricePer1cm_2 >= pizza2PricePer1cm_2 ? "2" : "1") + "Cena pizzy (na 1cm^2): " + pizza1PricePer1cm_2 + " vs " + pizza2PricePer1cm_2 + ".");
             }
         });
         return root;
