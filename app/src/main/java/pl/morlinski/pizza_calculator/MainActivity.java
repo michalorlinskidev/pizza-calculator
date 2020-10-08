@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            pizzaCalcResult.setText(String.format("Bardziej opłaca Ci się opcja numer: %1$s. Cena pizzy (na 1cm^2): %2$s vs %3$s. Powierzchnia: %4$s vs %5$s",
+            pizzaCalcResult.setText(String.format("Bardziej opłaca Ci się opcja numer: %1$s. Cena pizzy (na 1cm^2): %2$.02f zł vs %3$.02f zł. Powierzchnia: %4$.02f cm^2 vs %5$.02f cm^2",
                     (pizza1.pricePer_1cm_2() >= pizza2.pricePer_1cm_2() ? "2" : "1"),
                     pizza1.pricePer_1cm_2(), pizza2.pricePer_1cm_2(),
                     pizza1.area(), pizza2.area()
