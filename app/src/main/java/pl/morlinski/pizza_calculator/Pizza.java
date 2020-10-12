@@ -38,4 +38,12 @@ public class Pizza {
 
         throw new IllegalStateException();
     }
+
+    public int getDiameter() {
+        return diameter;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
 }

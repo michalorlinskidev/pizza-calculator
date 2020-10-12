@@ -1,10 +1,14 @@
 package pl.morlinski.pizza_calculator;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -32,7 +36,34 @@ public class PizzaView {
         size.put(root.findViewById(sizeBig), 35);
         size.put(root.findViewById(sizeCustom), 0);
         buttonOnClick(size, (Pizza p, Integer i) -> {
-            p.setDiameter(i);
+            if (i == 0) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(root.getContext());
+                LayoutInflater inflater = LayoutInflater.from(root.getContext());
+                View dialogView = inflater.inflate(R.layout.input_alert_dialog, null);
+
+                EditText sizeView = dialogView.findViewById(R.id.input_alert_dialog);
+                sizeView.setText(Integer.toString(pizza.getDiameter()));
+
+                builder.setTitle("Ustaw średnicę pizzy:")
+                        .setView(dialogView)
+                        .setPositiveButton("Ustaw", (d, w) -> {
+                            try {
+                                int sizeValue = parseInt(sizeView.getText().toString());
+                                if (sizeValue <= 0) {
+                                    throw new IllegalStateException();
+                                }
+                                p.setDiameter(sizeValue);
+                            } catch (NumberFormatException | IllegalStateException ex) {
+                                System.out.println(ex);
+                                showMessageDialog("Błędnie wprowadzona dana. Poprzednia wartość została przywrócona.", root.getContext());
+                            }
+                        })
+                        .setNegativeButton("Anuluj", (d, w) -> {
+                        })
+                        .show();
+            } else {
+                p.setDiameter(i);
+            }
         });
         root.findViewById(sizeSelect).callOnClick();
 
@@ -44,7 +75,34 @@ public class PizzaView {
         quantity.put(root.findViewById(quantityFive), 5);
         quantity.put(root.findViewById(quantityCustom), 0);
         buttonOnClick(quantity, (Pizza p, Integer i) -> {
-            p.setQuantity(i);
+            if (i == 0) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(root.getContext());
+                LayoutInflater inflater = LayoutInflater.from(root.getContext());
+                View dialogView = inflater.inflate(R.layout.input_alert_dialog, null);
+
+                EditText sizeView = dialogView.findViewById(R.id.input_alert_dialog);
+                sizeView.setText(Integer.toString(pizza.getQuantity()));
+
+                builder.setTitle("Ustaw liczbę pizzy:")
+                        .setView(dialogView)
+                        .setPositiveButton("Ustaw", (d, w) -> {
+                            try {
+                                int quantityValue = parseInt(sizeView.getText().toString());
+                                if (quantityValue <= 0) {
+                                    throw new IllegalStateException();
+                                }
+                                p.setQuantity(quantityValue);
+                            } catch (NumberFormatException | IllegalStateException ex) {
+                                System.out.println(ex);
+                                showMessageDialog("Błędnie wprowadzona dana. Poprzednia wartość została przywrócona.", root.getContext());
+                            }
+                        })
+                        .setNegativeButton("Anuluj", (d, w) -> {
+                        })
+                        .show();
+            } else {
+                p.setQuantity(i);
+            }
         });
         root.findViewById(quantitySelect).callOnClick();
 
@@ -86,6 +144,15 @@ public class PizzaView {
                 setter.accept(pizza, e.getValue());
             });
         }
+    }
+
+    private void showMessageDialog(String text, Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle("Informacja")
+                .setMessage(text)
+                .setPositiveButton("Zamknij", (dialog, which) -> {
+                })
+                .show();
     }
 
 }
