@@ -19,8 +19,8 @@ public class Pizza {
         this.quantity = quantity;
     }
 
-    public void setPrice(int price) {
-        this.price = Optional.of(price);
+    public void setPrice(Integer price) {
+        this.price = Optional.ofNullable(price);
     }
 
     public boolean isSet() {
@@ -32,6 +32,10 @@ public class Pizza {
     }
 
     public double pricePer_1cm_2() {
-        return price.get() / area();
+        if (isSet()) {
+            return price.get() / area();
+        }
+
+        throw new IllegalStateException();
     }
 }

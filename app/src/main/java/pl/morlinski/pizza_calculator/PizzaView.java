@@ -64,7 +64,14 @@ public class PizzaView {
 
             @Override
             public void afterTextChanged(Editable s) {
-                pizza.setPrice(parseInt(price.getText().toString()));
+                Integer priceValue = null;
+                try {
+                    priceValue = parseInt(price.getText().toString());
+                } catch (NumberFormatException ex) {
+                    System.out.println(ex);
+                }
+
+                pizza.setPrice(priceValue);
             }
         });
     }
