@@ -2,7 +2,9 @@ package pl.morlinski.pizza_calculator;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,11 +35,33 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            showMessageDialog(String.format("Bardziej opłaca Ci się opcja numer: %1$s. Cena pizzy (na 1cm^2): %2$.02f zł vs %3$.02f zł. Powierzchnia: %4$.02f cm^2 vs %5$.02f cm^2",
-                    (pizza1.pricePer_1cm_2() >= pizza2.pricePer_1cm_2() ? "2" : "1"),
-                    pizza1.pricePer_1cm_2(), pizza2.pricePer_1cm_2(),
-                    pizza1.area(), pizza2.area()
-            ));
+            final AlertDialog.Builder builder = new AlertDialog.Builder(root.getContext());
+            LayoutInflater inflater = LayoutInflater.from(root.getContext());
+            View dialogView = inflater.inflate(R.layout.result_alert_dialog, null);
+
+            TextView result1Price = dialogView.findViewById(R.id.result1Price);
+            TextView result2Price = dialogView.findViewById(R.id.result2Price);
+            TextView result1Size = dialogView.findViewById(R.id.result1Size);
+            TextView result2Size = dialogView.findViewById(R.id.result2Size);
+            TextView result1 = dialogView.findViewById(R.id.result1);
+            TextView result2 = dialogView.findViewById(R.id.result2);
+
+            result1Price.setText(String.format("%1$.02f zł", pizza1.pricePer_1cm_2()));
+            result2Price.setText(String.format("%1$.02f zł", pizza2.pricePer_1cm_2()));
+            result1Size.setText(String.format("%1$.02f cm^2", pizza1.area()));
+            result2Size.setText(String.format("%1$.02f cm^2", pizza2.area()));
+
+            boolean selectPizza1 = pizza1.pricePer_1cm_2() < pizza2.pricePer_1cm_2();
+
+            result1.setText(selectPizza1 ? "KUP" : "NIE KUPUJ");
+            result2.setText(selectPizza1 ? "NIE KUPUJ" : "KUP");
+
+            builder.setTitle("Podsumowanie")
+                    .setView(dialogView)
+                    .setPositiveButton("Zamknij", (d, w) -> {
+                    })
+                    .show();
+
         });
 
     }
